@@ -8,6 +8,5 @@ public class FirstClass {
 		
 		System.out.println("enter a name");
 		System.out.println("push and commit ");
-		System.out.println("added code");
 	}
 }
