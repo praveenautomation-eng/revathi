@@ -1,12 +1,17 @@
 package com.Praveen;
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.util.Properties;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.firefox.FirefoxOptions;
+import org.openqa.selenium.firefox.FirefoxProfile;
+import org.openqa.selenium.firefox.ProfilesIni;
 
 public class BaseTest 
 {
@@ -16,6 +21,7 @@ public class BaseTest
 	public static Properties p;
 	public static Properties e;
 	public static Properties envprop;
+	public static Properties orprop;
 	
 	public static void init() throws Exception
 	{
@@ -33,7 +39,11 @@ public class BaseTest
 		fis=new FileInputStream(projectPath+"//"+str+".properties");
 		envprop=new Properties();
 		envprop.load(fis);
-		System.out.println(envprop.getProperty("amazomurl"));
+		System.out.println(envprop.getProperty("axisurl"));
+		
+		fis=new FileInputStream(projectPath+"//or.properties");
+		orprop=new Properties();
+		orprop.load(fis);
 		
 	}
 	
@@ -41,15 +51,27 @@ public class BaseTest
 	{
 		if(p.getProperty(browser).equals("chrome")) 
 		{
+			
+			ChromeOptions ch=new ChromeOptions();
+			ch.addArguments("user-data-dir=C:\\Users\\nprav\\AppData\\Local\\Google\\Chrome\\User Data\\Profile 1");
+			ch.addArguments("--disable-notifications ");
 			//System.setProperty("webdriver.chrome.driver", "C:\\selenium\\chromedriver_win32 (1)\\chromedriver.exe");
 			//System.setProperty("webdriver.chrome.driver", System.getProperty("user.dir")+"//drivers//chromedriver.exe");
-			 driver=new ChromeDriver();
+			 driver=new ChromeDriver(ch);
 		}
 		else if(p.getProperty(browser).equals("firefox")) 
 		{
 			//System.setProperty("webdriver.gecko.driver","C:\\selenium\\geckodriver-v0.26.0-win64\\geckodriver.exe" );
 			//System.setProperty("webdriver.gecko.driver", System.getProperty("user.dir")+"//drivers//geckodriver.exe");
-	        driver=new FirefoxDriver();
+	       
+			ProfilesIni pro=new ProfilesIni();
+		FirefoxProfile v = pro.getProfile("praveen ff");
+		v.setPreference("dom.webnotifications.enabled", false);
+			
+			FirefoxOptions opt=new FirefoxOptions();
+			opt.setProfile(v);
+			
+			driver=new FirefoxDriver(opt);
 		}
 		
 	}
@@ -58,7 +80,49 @@ public class BaseTest
 	public static void navigateUrl(String url)
 	{
 		driver.get(envprop.getProperty(url));
-		
-		
 	}
+	
+	
+	public static void elementClick(String locatorKey) 
+	{
+		getElement(locatorKey).click();
+		//driver.findElement(By.xpath(orprop.getProperty(locatorKey))).click();
+	}
+	
+
+	public static WebElement getElement(String locatorKey) 
+	{
+		WebElement element=null;
+		if(locatorKey.endsWith("_id")) {
+			element=driver.findElement(By.id(orprop.getProperty(locatorKey)));
+		}else if(locatorKey.endsWith("_name")) {
+			element=driver.findElement(By.name(orprop.getProperty(locatorKey)));
+		}else if(locatorKey.endsWith("_classname")) {
+			element=driver.findElement(By.className(orprop.getProperty(locatorKey)));
+		}else if(locatorKey.endsWith("_xpath")) {
+			element=driver.findElement(By.xpath(orprop.getProperty(locatorKey)));
+		}else if(locatorKey.endsWith("_css")) {
+			element=driver.findElement(By.cssSelector(orprop.getProperty(locatorKey)));
+		}else if(locatorKey.endsWith("_linktext")) {
+			element=driver.findElement(By.linkText(orprop.getProperty(locatorKey)));
+		}else if(locatorKey.endsWith("_partiallinktext")) {
+			element=driver.findElement(By.partialLinkText(orprop.getProperty(locatorKey)));
+		}
+		
+		return element;
+	}
+
+	public static void typeValue(String locatorKey, String text) 
+	{
+		getElement(locatorKey).sendKeys(orprop.getProperty(text));
+		//driver.findElement(By.name(orprop.getProperty(locatorKey))).sendKeys(orprop.getProperty(text));
+	}
+	
+
+	public static void selectItem(String locatorKey, String item) 
+	{
+		getElement(locatorKey).sendKeys(orprop.getProperty(item));
+		//driver.findElement(By.id(orprop.getProperty(locatorKey))).sendKeys(orprop.getProperty(item));
+	}
+	
 }
