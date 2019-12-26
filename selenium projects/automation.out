@@ -1,0 +1,12 @@
+Loading properties files .........
+Launching the Browser :-chrome
+Launched the url :- null
+Selected the item :- Books by using he property :- searchDropdownBox
+Entered the value :- Harry Potter by using he property :- twotabsearchtextbox
+Clicked on element by using the property :- //div[@class='nav-search-submit nav-sprite']//input[@class='nav-input']
+Loading properties files .........
+Launching the Browser :-chrome
+Launched the url :- https://www.amazon.in
+Selected the item :- Books by using he property :- searchDropdownBox
+Entered the value :- Harry Potter by using he property :- twotabsearchtextbox
+Clicked on element by using the property :- //div[@class='nav-search-submit nav-sprite']//input[@class='nav-input']
